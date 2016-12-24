@@ -58,7 +58,7 @@ public class PlayerController : BaseCharacterController
 		CheckStatus();
 
 		// 死亡中は操作負荷
-		if (_status == Status.Dying || _status == Status.Start) return;
+		if (_status != Status.Normal) return;
 
 		Move();
 		Action();
@@ -301,6 +301,9 @@ public class PlayerController : BaseCharacterController
 
 			break;
 		case Status.Damage:
+
+			_animation.Play("Damage");
+
 			StartCoroutine(CoStartFlash(1.0f, () =>
 			{
 				_status = Status.Normal;
