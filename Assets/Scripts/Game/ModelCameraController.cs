@@ -9,6 +9,13 @@ public class ModelCameraController : MonoBehaviour
 	[SerializeField]
 	private PlayerController _player;
 
+	private Vector3 _initDistance = Vector3.zero;
+
+	private void Awake()
+	{
+		_initDistance = _player.gameObject.transform.localPosition - gameObject.transform.localPosition;
+	}
+
 	private void LateUpdate()
 	{
 		var playerTransform = _player.gameObject.transform;
@@ -20,6 +27,6 @@ public class ModelCameraController : MonoBehaviour
 		// 常にTPS視点になるよう移動
 		//var pPos = playerTransform.localPosition;
 		var myPos = gameObject.transform.localPosition;
-		gameObject.transform.localPosition = new Vector3(playerTransform.localPosition.x, myPos.y, myPos.z);
+		gameObject.transform.localPosition = new Vector3(playerTransform.localPosition.x, myPos.y, playerTransform.localPosition.z - _initDistance.z);
 	}
 }

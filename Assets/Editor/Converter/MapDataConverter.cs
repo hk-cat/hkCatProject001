@@ -1,11 +1,9 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
-using Excel;
 
 public static class MapDataConverter
 {
@@ -100,7 +98,7 @@ public static class MapDataConverter
 
 			while (rowIndex < rowNum + 1)
 			{
-				for (var i = 0; i < columnNum + 1; ++i)
+				for (var i = 0; i < columnNum; ++i)
 				{
 					var cell = sheet.GetRow(rowIndex).GetCell(i);
 

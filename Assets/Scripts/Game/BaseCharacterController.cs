@@ -13,6 +13,7 @@ public class BaseCharacterController : MonoBehaviour
 		Damage,     // ダメージ
 		Dead,       // 死んだ瞬間
 		Dying,      // 死んでいる状態
+		Clear,		// クリア(操作不可)
 	}
 
 	/// <summary> アニメーション </summary>

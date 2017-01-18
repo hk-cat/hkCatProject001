@@ -51,12 +51,12 @@ public class FadeManager : MonoBehaviour
 
 	/// <summary> フェード用のテクスチャ </summary>
 	[SerializeField]
-	private UITexture _fadeTex;
+	private UITexture _fadeTex = null;
 
 	/// <summary> フェード中か </summary>
-	public bool isFading;
+	public bool isFading = false;
 	/// <summary> シーンパラメータ </summary>
-	public SceneParam sceneParam;
+	public SceneParam sceneParam = null;
 
 	/// <summary>
 	/// フェード付きシーン遷移

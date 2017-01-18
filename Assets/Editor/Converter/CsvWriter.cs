@@ -104,7 +104,7 @@ public class CsvWriter : IDisposable
 			{
 				if (j == data.Length - 1)
 				{
-					this.WriteRow(row[i], true);
+					this.WriteRow(row[i], true, (i == sheetlast));
 					j = 0;
 				}
 				else
@@ -124,9 +124,9 @@ public class CsvWriter : IDisposable
 	/// <param name="isNewLine">改行するか</param>
 	public void Write(List<String> data, bool isNewLine)
 	{
-		foreach (var row in data)
+		for(int i= 0; i < data.Count; ++i)
 		{
-			this.WriteRow(row, isNewLine);
+			this.WriteRow(data[i], isNewLine, (i == data.Count-1));
 		}
 	}
 
@@ -135,13 +135,13 @@ public class CsvWriter : IDisposable
 	/// </summary>
 	/// <typeparam name="T">リストの型。</typeparam>
 	/// <param name="row">CSVの１レコード。</param>
-	public void WriteRow(string row, bool isNewLine)
+	public void WriteRow(string row, bool isNewLine, bool isEnd = false)
 	{
 		var sb = new StringBuilder();
 		sb.Append(row);
 
 		if (isNewLine == true) { sb.Append(System.Environment.NewLine); }
-		else
+		else if (!isEnd)
 		{
 			sb.Append(",");
 		}

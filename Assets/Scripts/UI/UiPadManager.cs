@@ -197,4 +197,16 @@ public class UiPadManager : SingletonMonoBehaviour<UiPadManager>
 			onClickRRight();
 		}
 	}
+
+	/// <summary>
+	/// 左のパッドコマンドが押されているか
+	/// </summary>
+	/// <returns>true:押されてる、false:押されていない</returns>
+	public bool IsPressedLeftCommand()
+	{
+		return (_holdButtonUp.pressed
+			|| _holdButtonDown.pressed
+			|| _holdButtonLeft.pressed
+			|| _holdButtonRight.pressed);
+	}
 }

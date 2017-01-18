@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : BaseCharacterController
 {
@@ -27,6 +26,12 @@ public class PlayerController : BaseCharacterController
 	/// </summary>
 	public override void SetUp()
 	{
+		var start = GameObject.Find("Start(Clone)");
+		if(start != null)
+		{
+			gameObject.transform.localPosition = start.gameObject.transform.localPosition;
+		}
+
 		_junpCount = 0;
 		_life = LIFE_MAX;
 
@@ -62,20 +67,23 @@ public class PlayerController : BaseCharacterController
 
 		Move();
 		Action();
+	}
 
+	private void LateUpdate()
+	{
 		if (gameObject.transform.localPosition.y < -10)
 		{
 			Damage(DAMAGE_VAL);
 			gameObject.transform.localPosition = Vector3.zero;
 		}
-	}
 
-	private void LateUpdate()
-	{
 		if (_status == Status.Normal)
 		{
-			if (!_animation.isPlaying)
+			if (!UiPadManager.Instance.IsPressedLeftCommand())
 			{
+				if(!_animation.IsPlaying("Attack")
+					&& !_animation.IsPlaying("Dead")
+					&& !_animation.IsPlaying("Damage"))
 				// 待機状態に戻す
 				_animation.Play("Wait");
 			}
@@ -89,6 +97,13 @@ public class PlayerController : BaseCharacterController
 		if (collision.gameObject.name == "Stg_Floor")
 		{
 			_junpCount = 0;
+		}
+
+		Debug.Log(collision.gameObject.name);
+
+		if(collision.gameObject.name == "Goal(Clone)")
+		{
+			_status = Status.Clear;
 		}
 	}
 
@@ -167,6 +182,9 @@ public class PlayerController : BaseCharacterController
 	/// </summary>
 	private void MoveUp()
 	{
+		// 死亡中は操作負荷
+		if (_status != Status.Normal) return;
+
 		var cameraRot = _camera.gameObject.transform.localEulerAngles;
 		var euler = cameraRot.y + 0f;
 
@@ -180,6 +198,9 @@ public class PlayerController : BaseCharacterController
 	/// </summary>
 	private void MoveDown()
 	{
+		// 死亡中は操作負荷
+		if (_status != Status.Normal) return;
+
 		var cameraRot = _camera.gameObject.transform.localEulerAngles;
 		var euler = cameraRot.y + 180f;
 
@@ -193,6 +214,9 @@ public class PlayerController : BaseCharacterController
 	/// </summary>
 	private void MoveLeft()
 	{
+		// 死亡中は操作負荷
+		if (_status != Status.Normal) return;
+
 		var cameraRot = _camera.gameObject.transform.localEulerAngles;
 		var euler = cameraRot.y - 90;
 
@@ -206,6 +230,9 @@ public class PlayerController : BaseCharacterController
 	/// </summary>
 	private void MoveRight()
 	{
+		// 死亡中は操作負荷
+		if (_status != Status.Normal) return;
+
 		var cameraRot = _camera.gameObject.transform.localEulerAngles;
 		var euler = cameraRot.y + 90;
 
@@ -219,6 +246,9 @@ public class PlayerController : BaseCharacterController
 	/// </summary>
 	protected override void Jump()
 	{
+		// 死亡中は操作負荷
+		if (_status != Status.Normal) return;
+
 		if (_junpCount < MAX_JUMP_COUNT)
 		{
 			_rigitBody.AddForce(Vector3.up * 100);
@@ -233,6 +263,9 @@ public class PlayerController : BaseCharacterController
 	/// </summary>
 	private void Attack()
 	{
+		// 死亡中は操作負荷
+		if (_status != Status.Normal) return;
+
 		_animation.Play("Attack");
 	}
 
@@ -325,6 +358,13 @@ public class PlayerController : BaseCharacterController
 			}));
 
 			break;
+
+		case Status.Clear:
+
+			FadeManager.Instance.LoadScene(SceneName.HomeScene, LoadSceneMode.Single, FadeManager.FadeType.White);
+
+			break;
+
 		default:
 			break;
 		}

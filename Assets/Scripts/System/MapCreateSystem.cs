@@ -1,67 +1,80 @@
 ﻿using UnityEngine;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Map;
 
 public class MapCreateSystem : MonoBehaviour
 {
-	///// <summary>
-	///// マップ定義
-	///// </summary>
-	//private static readonly string[] Map =
-	//{
-	//	"S"," "," "," "," ",
-	//	" ","壁"," "," "," ",
-	//	" "," ","壁"," "," ",
-	//	" "," "," ","壁"," ",
-	//	" "," "," "," ","G",
-	//};
+	/// <summary>
+	/// １マス当たりの距離
+	/// </summary>
+	private const float MAP_DISTANCE = 1;
 
-	///// <summary>
-	///// マップのパラメータに
-	///// </summary>
-	//[SerializeField]
-	//private Dictionary<string, GameObject> _mapObjDic = new Dictionary<string, GameObject>();
+	/// <summary> マップを生成する親オブジェクト </summary>
+	[SerializeField]
+	private GameObject _parent = null;
+
+	[SerializeField]
+	private List<string> _mapType = new List<string>();
+
+	[SerializeField]
+	private List<GameObject> _mapObject = new List<GameObject>();
+
+	/// <summary>
+	/// マップのパラメータに
+	/// </summary>
+	private Dictionary<string, GameObject> _mapObjDic = new Dictionary<string, GameObject>();
+
+	/// <summary>
+	/// セットアップ
+	/// </summary>
+	public void SetUp()
+	{
+		var objCount = _mapObject.Count;
+		var typeCount = _mapType.Count;
+
+		var num = (objCount < typeCount) ? objCount : typeCount;
+
+		for (int i = 0; i < num; ++i)
+		{
+			_mapObjDic.Add(_mapType[i], _mapObject[i]);
+		}
+
+		var map = MapLoadSystem.LoadCsvFile("Map001");
+
+		CreateMap(map);
+	}
 
 	/// <summary>
 	/// マップ生成
 	/// </summary>
 	/// <param name="mapInfo">マップ情報</param>
-	private void CreateMap(string[] mapInfo)
+	private void CreateMap(MapData mapInfo)
 	{
-		//foreach(var map in mapInfo)
-		//{
-		//	switch(map)
-		//	{
-		//	// スタート
-		//	case MapType.start:
+		Vector3 pos = Vector3.zero;
 
-		//		break;
+		int index = 0;
 
-		//	// ゴール
-		//	case MapType.goal:
+		var xCollection = mapInfo.columnNum / 2;
+		var zCollection = mapInfo.row / 2;
 
-		//		break;
+		foreach (var map in mapInfo.map)
+		{
+			var i = index % mapInfo.columnNum;
+			var j = index / mapInfo.columnNum;
 
-		//	// 壁
-		//	case MapType.wall:
+			pos.x = (i - xCollection) * MAP_DISTANCE;
+			pos.z = (zCollection - j) * MAP_DISTANCE;
 
-		//		break;
-			
-		//	// 何もない
-		//	case MapType.none:
+			if (_mapObjDic.ContainsKey(map))
+			{
+				GameObject obj = (GameObject)Instantiate(_mapObjDic[map], pos, Quaternion.identity);
 
-		//		break;
+				if (_parent != null)
+				{
+					obj.transform.parent = _parent.transform;
+				}
+			}
 
-		//	// 未定義
-		//	default:
-		//		Debug.LogWarning(map + " is not defined");
-		//		break;
-		//	}
-
-		//}
-
-
+			++index;
+		}
 	}
 }
