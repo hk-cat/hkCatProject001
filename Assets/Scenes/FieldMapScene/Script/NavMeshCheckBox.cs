@@ -9,7 +9,7 @@ public class NavMeshCheckBox : MonoBehaviour
 
 	/// <summary> NavMeshAgent </summary>
 	[SerializeField]
-	private NavMeshAgent _agent = null;
+	private UnityEngine.AI.NavMeshAgent _agent = null;
 
 	/// <summary> NavController </summary>
 	[SerializeField]

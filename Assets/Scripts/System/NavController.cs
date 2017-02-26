@@ -5,7 +5,7 @@ public class NavController : MonoBehaviour
 {
 	/// <summary> NavMeshAgent </summary>
 	[SerializeField]
-	private NavMeshAgent _navMeshAgent = null;
+	private UnityEngine.AI.NavMeshAgent _navMeshAgent = null;
 
 	/// <summary> ターゲット </summary>
 	private GameObject _target = null;
@@ -17,7 +17,7 @@ public class NavController : MonoBehaviour
 	{
 		if (_navMeshAgent == null)
 		{
-			_navMeshAgent = GetComponent<NavMeshAgent>();
+			_navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
 		}
 
 		if (_navMeshAgent != null && _navMeshAgent.enabled && _target != null)
